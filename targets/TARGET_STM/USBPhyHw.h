@@ -50,11 +50,21 @@
 
 #endif
 
-#define NB_ENDPOINT  16
+#if defined(TARGET_STM32L0) || defined(TARGET_STM32WB)
+#define NB_ENDPOINT  8
+#else
+#define NB_ENDPOINT 16
+#endif
 
 // #define MAXTRANSFER_SIZE  0x200
 #define MAX_PACKET_SIZE_SETUP (48)
 #define MAX_PACKET_SIZE_EP0 (64)
+#if (MBED_CONF_TARGET_USB_SPEED == USE_USB_OTG_HS)
+#define MAX_PACKET_SIZE_NON_ISO      64 // (512)
+#else
+#define MAX_PACKET_SIZE_NON_ISO      (64)
+#endif
+#define MAX_PACKET_SIZE_ISO          (256 + 128)     // Spec can go up to 1023, only ram for this though
 
 class USBPhyHw : public USBPhy {
 public:
