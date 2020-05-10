@@ -1204,8 +1204,9 @@ void PCD_ReadPMA(USB_TypeDef  *USBx, uint8_t *pbUsrBuf, uint16_t wPMABufAddr, ui
   pdwVal = (uint16_t *)(wPMABufAddr + (uint32_t)USBx + 0x400U);
   for (i = n; i != 0U; i--)
   {
-    *(uint16_t*)pbUsrBuf++ = *pdwVal++;
-    pbUsrBuf++;
+	  uint16_t tmp = *pdwVal++; // pbUsrBuf might not be aligned
+	  *pbUsrBuf++ = (uint8_t)((tmp >> 0) & 0xFF); // Low byte
+	  *pbUsrBuf++ = (uint8_t)((tmp >> 8) & 0xFF); // High byte
   }
 }
 /**
